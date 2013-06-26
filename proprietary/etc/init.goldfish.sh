@@ -66,5 +66,3 @@ case "$my_ip" in
     *) ifconfig eth1 "$my_ip" netmask 255.255.255.0 up
     ;;
 esac
-
-/system/etc/init.d/*

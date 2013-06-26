@@ -12,6 +12,10 @@ umask 003
 
 mkdir $DATA_HASH_DIR
 
+num_installed=0
+done_prop=`getprop $PRELOAD_DONE_PROP`
+sleep 90
+
 CHECK_DEVICE_ENCRYPT=vold.decrypt
 device_encrypt=`getprop $CHECK_DEVICE_ENCRYPT`
 if [ -z "$device_encrypt" -o "$device_encrypt" = "trigger_restart_framework" ]; then
@@ -31,12 +35,12 @@ for file in `ls $PRELOAD_APP_DIR`; do
     if [ "$newMD5" != "$oldMD5" ]; then
         isInstalled=`pm path $file`
         if [ -n "$isInstalled" -o ! -e "$DATA_HASH_DIR/$file.md5" ]; then
-            pm install -r $PRELOAD_APP_DIR/$file
-            ret=$?
-            if [ $ret -ne 0 ]; then
+            ret=`pm install -r $PRELOAD_APP_DIR/$file`
+            if [ "$ret" != "Success" ]; then
                 echo "$file: install failed, error: $ret"
                 echo "$file: install failed, error: $ret" >> $PRELOAD_LOG_FILE
             else
+                num_installed=$(($num_installed+1))
                 echo "$file: install successful, copying $file.md5 to $DATA_HASH_DIR"
                 echo "$file: install successful, copying $file.md5 to $DATA_HASH_DIR" >> $PRELOAD_LOG_FILE
                 cp $PRELOAD_HASH_DIR/$file.md5 $DATA_HASH_DIR
@@ -51,6 +55,10 @@ for file in `ls $PRELOAD_APP_DIR`; do
         echo "$file: install skipped, file unchanged" >> $PRELOAD_LOG_FILE
     fi
 done
+
+if [ $num_installed -ne 0 -a "$done_prop" != "1" ]; then
+    am broadcast -a com.packagemanager.action.PRE_INSTALL_LOADED
+fi
 
 retries=10
 echo "preinstall finished, setting $PRELOAD_DONE_PROP to 1"

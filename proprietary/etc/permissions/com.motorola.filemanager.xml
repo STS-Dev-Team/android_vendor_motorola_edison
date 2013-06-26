@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <permissions>
   <feature name="com.motorola.filemanager.phoenix"/>
+  <library name="com.motorola.android.filemanager"
+           file="/system/framework/com.motorola.android.filemanager.jar"/>
 </permissions>

@@ -4,6 +4,8 @@ PART_ALIAS=$1
 MOUNT_POINT=$2
 BLOCK_DEVICE=/dev/block/${PART_ALIAS}
 UNPACK_IMAGE=/system/${PART_ALIAS}.img.gz
+HOSTS_FILE=/data/data/com.android.settings/files/hosts
+HOSTS_ENABLE=/data/data/com.android.settings/files/hosts_enable
 
 if [ -e ${BLOCK_DEVICE} ]; then
     if [ -e ${UNPACK_IMAGE} ]; then
@@ -44,4 +46,10 @@ if [ -e ${BLOCK_DEVICE} ]; then
         fi
     fi
     mount -t ext3 -o nosuid,nodev,noatime,nodiratime,barrier=1 ${BLOCK_DEVICE} ${MOUNT_POINT}
+    if [ "$MOUNT_POINT" = "/data" ]; then
+        if [ -e ${HOSTS_ENABLE} ]; then
+            chmod 644 ${HOSTS_FILE}
+            mount -o bind ${HOSTS_FILE} /system/etc/hosts
+        fi
+    fi
 fi
