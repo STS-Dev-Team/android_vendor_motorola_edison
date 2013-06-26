@@ -200,6 +200,7 @@ $(VENDOR_BLOB_FOLDER)/lib/libu300-ril.so:/system/lib/libu300-ril.so \
 
 # system/lib/hw
 PRODUCT_COPY_FILES += \
+$(VENDOR_BLOB_FOLDER)/lib/hw/audio.primary.omap4.so:/system/lib/hw/audio.primary.omap4.so \ 
 $(VENDOR_BLOB_FOLDER)/lib/hw/gps.edison.so:/system/lib/hw/gps.edison.so \
 $(VENDOR_BLOB_FOLDER)/lib/hw/lights.edison.so:/system/lib/hw/lights.edison.so \
 $(VENDOR_BLOB_FOLDER)/lib/hw/sensors.edison.so:/system/lib/hw/sensors.edison.so \
